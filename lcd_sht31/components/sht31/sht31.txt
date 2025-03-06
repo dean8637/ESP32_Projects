@@ -1,0 +1,19 @@
+I2C SCL_pin 4
+I2C SDA_pin 5
+
+ADDR 0x44
+
+Single measure 0x2c06
+Read status 0xf32d
+Clear status 0x3041
+Enable heater 0x306d
+Disable heater 0x3066
+
+RH = 100*(Srh / (2<16> - 1))
+Tc = -45+175*(St / (2<16> - 1))
+
+
+单次测量流程
+主机：发送地址---->W状态---->1字节命令---->1字节命令
+主机：发送地址---->R状态
+主机：接收数据6个字节
