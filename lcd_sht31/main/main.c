@@ -16,7 +16,7 @@ TaskHandle_t task_start_handle;
 
 TaskHandle_t single_shot_handle;
 TaskHandle_t find_sht31_handle;
-TaskHandle_t lcd_show_sht31_handle;
+
 
 
  
@@ -92,8 +92,6 @@ void Task_Start()
 
     xTaskCreatePinnedToCore(Task_SHT31_Single_Shot, "SHT31_Single_Shot", 3072, NULL, 12, &single_shot_handle, 1);
     
-    
-    xTaskCreatePinnedToCore(Task_LCD_Show_SHT31, "LCD_show_SHT31", 3072, NULL, 11, &lcd_show_sht31_handle, 1);
 
     vTaskDelete(NULL);
 }
@@ -126,31 +124,17 @@ void Task_SHT31_Single_Shot()
 
         ESP_LOGI("SHT31", "Temp: %0.2f℃  Hum: %0.2f%%", temp, humi);
 
-        xTaskNotifyGive(lcd_show_sht31_handle);
-        
-        vTaskDelayUntil(&pxPreviousWakeTime, 1000);
-
-    }
-    
-}
-
-
-void Task_LCD_Show_SHT31()
-{
-
-    while (1)
-    {
-        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-
         LCD_ShowFloatNum1(84, 0, temp, 4, 32, 2, 0);
 
         LCD_ShowFloatNum1(84, 34, humi, 4, 32, 2, 0);
         LCD_ShowString(170, 34, "%", 32, 0);
 
         LCD_Refresh(&spi_dev_handle);
+        
+        vTaskDelayUntil(&pxPreviousWakeTime, 1000);
 
     }
-
+    
 }
 
 

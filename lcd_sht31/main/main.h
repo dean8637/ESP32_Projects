@@ -23,5 +23,4 @@ void Task_Start();
 
 void Task_SHT31_Single_Shot();
 
-void Task_LCD_Show_SHT31();
 
