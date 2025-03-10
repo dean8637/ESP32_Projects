@@ -1,0 +1,23 @@
+menu "Web Configuration"
+
+    config WEB_CONFIG_ENABLE
+        bool "Enable Web Configuration"
+        default y
+        help
+            Enable web-based WiFi configuration interface
+
+    config WEB_SERVER_PORT
+        int "HTTP Server Port"
+        default 80
+        range 1 65535
+        help
+            Port number for web configuration server
+
+    config WEB_MAX_RESP_SIZE
+        int "Maximum Response Size"
+        default 2048
+        range 512 4096
+        help
+            Maximum size for HTTP responses
+
+endmenu

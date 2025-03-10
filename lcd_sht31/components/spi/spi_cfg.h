@@ -25,9 +25,7 @@
 
 #define PIN_NUM_DC   14
 #define PIN_NUM_RST  9
-#define PIN_NUM_BCKL 5
 
-#define LCD_BK_LIGHT_ON_LEVEL   0
 
 extern  uint16_t BACK_COLOR;
 
@@ -42,8 +40,8 @@ extern  uint16_t BACK_COLOR;
 #define LCD_H 170
 #endif
 
-#define WHITE         	 0xFFFF
-#define BLACK         	 0x0000	
+#define WHITE         	 0xFF
+#define BLACK         	 0x00
 
 
 

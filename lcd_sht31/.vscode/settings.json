@@ -2,7 +2,7 @@
     "C_Cpp.intelliSenseEngine": "default",
     "idf.espIdfPathWin": "D:\\ESP_IDF\\v5.4\\esp-idf",
     "idf.toolsPathWin": "d:\\ESP_IDF\\Tools",
-    "idf.portWin": "COM7",
+    "idf.portWin": "COM8",
     "idf.customExtraVars": {
         "OPENOCD_SCRIPTS": "d:\\ESP_IDF\\Tools\\tools\\openocd-esp32\\v0.12.0-esp32-20240318/openocd-esp32/share/openocd/scripts",
         "IDF_CCACHE_ENABLE": "1",

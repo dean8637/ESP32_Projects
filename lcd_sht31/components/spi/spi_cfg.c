@@ -193,7 +193,7 @@ void spi_lcd_init(spi_device_handle_t *spi_device_handle_t)
     spi_cmd(spi_device_handle_t, 0x36); //Memory Data Access Control
     // spi_data(spi_device_handle_t, 0X00); //Memory Data Access Control: MX=0 ; DO=0 
     //spi_data(spi_device_handle_t, 0X48); //MX=1 ; DO=1 
-    spi_data(spi_device_handle_t, 0X4c); //MX=1 ; DO=1 GS=1
+    spi_data(spi_device_handle_t, 0X00); //MX=1 ; DO=1 GS=1
 
     spi_cmd(spi_device_handle_t, 0x3A); //Data Format Select 
     spi_data(spi_device_handle_t, 0X11); //10:4write for 24bit ; 11: 3write for 24bit

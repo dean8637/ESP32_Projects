@@ -1,0 +1,28 @@
+{
+    "C_Cpp.intelliSenseEngine": "default",
+    "idf.espIdfPathWin": "D:\\ESP_IDF\\v5.4\\esp-idf",
+    "idf.toolsPathWin": "d:\\ESP_IDF\\Tools",
+    "idf.pythonInstallPath": "d:\\ESP_IDF\\Tools\\tools\\idf-python\\3.11.2\\python.exe",
+    "files.associations": {
+        "string.h": "c",
+        "wifi_cfg.h": "c",
+        "nvs_flash.h": "c",
+        "nvs.h": "c",
+        "esp_mac.h": "c",
+        "sys.h": "c",
+        "esp_err.h": "c",
+        "esp_wifi.h": "c"
+    },
+    "idf.customExtraVars": {
+        "OPENOCD_SCRIPTS": "d:\\ESP_IDF\\Tools\\tools\\openocd-esp32\\v0.12.0-esp32-20240318/openocd-esp32/share/openocd/scripts",
+        "IDF_CCACHE_ENABLE": "1",
+        "ESP_ROM_ELF_DIR": "d:\\ESP_IDF\\Tools\\tools\\esp-rom-elfs\\20230320/",
+        "IDF_TARGET": "esp32s3"
+    },
+    "idf.openOcdConfigs": [
+        "interface/ftdi/esp32_devkitj_v1.cfg",
+        "target/esp32s3.cfg"
+    ],
+    "idf.portWin": "COM8",
+    "idf.flashType": "UART"
+}
