@@ -191,9 +191,9 @@ void spi_lcd_init(spi_device_handle_t *spi_device_handle_t)
     spi_data(spi_device_handle_t, 0X00); //VSHP1; VSLP1 ; VSHN1 ; VSLN1
 
     spi_cmd(spi_device_handle_t, 0x36); //Memory Data Access Control
-    // spi_data(spi_device_handle_t, 0X00); //Memory Data Access Control: MX=0 ; DO=0 
+    spi_data(spi_device_handle_t, 0X00); //Memory Data Access Control: MX=0 ; DO=0 
     //spi_data(spi_device_handle_t, 0X48); //MX=1 ; DO=1 
-    spi_data(spi_device_handle_t, 0X00); //MX=1 ; DO=1 GS=1
+    //spi_data(spi_device_handle_t, 0X4C); //MX=1 ; DO=1 GS=1
 
     spi_cmd(spi_device_handle_t, 0x3A); //Data Format Select 
     spi_data(spi_device_handle_t, 0X11); //10:4write for 24bit ; 11: 3write for 24bit
@@ -324,6 +324,9 @@ void LCD_DrawPoint(uint16_t x,uint16_t y,uint8_t mode)
 }
 
 
+
+
+
 void LCD_ShowChar(uint16_t x,uint16_t y,uint8_t num,uint8_t sizey,uint8_t mode)
 {
 	uint8_t temp,sizex,t;
@@ -337,6 +340,8 @@ void LCD_ShowChar(uint16_t x,uint16_t y,uint8_t num,uint8_t sizey,uint8_t mode)
 		if(sizey==12)temp=ascii_1206[num][i];		       
 		else if(sizey==24)temp=ascii_2412[num][i];		 
 		else if(sizey==32)temp=ascii_3216[num][i];		 
+		else if(sizey==64)temp=ascii_6432[num][i];		 
+		else if(sizey==72)temp=ascii_7236[num][i];		 
 		else return;
 		for(t=0;t<8;t++)
 		{
@@ -384,8 +389,55 @@ void LCD_ShowFloatNum1(uint16_t x, uint16_t y,  float num, uint8_t len, uint8_t 
 	}
 }
 
+void LCD_ShowIntNum(uint16_t x, uint16_t y, uint16_t num, uint8_t len, uint8_t sizey, uint8_t mode)
+{         	
+	uint8_t t,temp;
+	uint8_t enshow=0;
+	uint8_t sizex=sizey/2;
+	for(t=0;t<len;t++)
+	{
+		temp=(num/LCD_pow(10,len-t-1))%10;
+		if(enshow==0&&t<(len-1))
+		{
+			if(temp==0)
+			{
+				LCD_ShowChar(x+t*sizex,y,' ',sizey,mode);
+				continue;
+			}else enshow=1; 
+		 	 
+		}
+	 	LCD_ShowChar(x+t*sizex,y,temp+48,sizey,mode);
+	}
+} 
 
 
+// void LCD_TempSymbol(uint16_t x,uint16_t y,uint8_t sizey,uint8_t mode)
+// {
+// 	uint8_t temp1,sizex,t;
+// 	uint16_t i,TypefaceNum;
+// 	uint16_t x0=x;
+// 	sizex=sizey/2;
+// 	TypefaceNum=(sizex/8+((sizex%8)?1:0))*sizey;  
+// 	for(i=0;i<TypefaceNum;i++)
+// 	{ 
+
+// 		if(sizey==72)
+//             temp1=temp_symbol[i];		 
+
+// 		for(t=0;t<8;t++)
+// 		{
+// 				if(temp1&(0x01<<t))LCD_DrawPoint(x,y,mode);
+// 				else LCD_DrawPoint(x,y,!mode);
+// 				x++;
+// 				if((x-x0)==sizex)
+// 				{
+// 					x=x0;
+// 					y++;
+// 					break;
+// 				}
+// 		}
+// 	}   	 	  
+// }
 
 
 

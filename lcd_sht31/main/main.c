@@ -64,9 +64,13 @@ void bsp_init()
 
     LCD_Fill(&spi_dev_handle, BACK_COLOR_WHITE);
 
-    LCD_ShowString(0, 0, "Temp:", 32, 0);
+    LCD_ShowString(10, 0, "TEMP", 72, 0);
+    LCD_ShowString(154, 0, ":", 72, 0);
 
-    LCD_ShowString(0, 34, "Humi:", 32, 0);
+    LCD_ShowString(10, 62, "HUMI:", 72, 0);
+    LCD_ShowString(154, 62, ":", 72, 0);
+
+
 
     LCD_Refresh(&spi_dev_handle);
 
@@ -101,6 +105,8 @@ void Task_SHT31_Single_Shot()
 {
 
     uint8_t data[6];
+    uint16_t temp_int;
+    uint16_t humi_int;
 
     static uint8_t single_shot[2] = {0x2c, 0x06};
 
@@ -122,12 +128,27 @@ void Task_SHT31_Single_Shot()
         temp = -45.0f + 175.0f * (raw_temp / 65535.0f);
         humi = 100.0f * (raw_hum / 65535.0f);
 
+        temp_int = (uint16_t)(temp*10);
+        humi_int = (uint16_t)(humi*10);
+        
+
         ESP_LOGI("SHT31", "Temp: %0.2f℃  Hum: %0.2f%%", temp, humi);
 
-        LCD_ShowFloatNum1(84, 0, temp, 4, 32, 2, 0);
 
-        LCD_ShowFloatNum1(84, 34, humi, 4, 32, 2, 0);
-        LCD_ShowString(170, 34, "%", 32, 0);
+
+        LCD_ShowIntNum(175, 0, temp_int/10, 2, 72, 0);
+        LCD_ShowString(247, 0, ".", 72, 0);
+        LCD_ShowIntNum(263, 0, temp_int%10, 1, 72, 0);
+        LCD_ShowString(299, 0, "C", 72, 0);
+
+        LCD_ShowIntNum(175, 62, humi_int/10, 2, 72, 0);
+        LCD_ShowString(247, 62, ".", 72, 0);
+        LCD_ShowIntNum(263, 62, humi_int%10, 1, 72, 0);
+        LCD_ShowString(299, 62, "%", 72, 0);
+
+
+
+        
 
         LCD_Refresh(&spi_dev_handle);
         

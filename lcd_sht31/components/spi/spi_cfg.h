@@ -10,6 +10,9 @@
 #include "driver/gpio.h"
 
 #include "font.h"
+#include "font2.h"
+#include "font3.h"
+
 
 
 
@@ -74,8 +77,10 @@ void LCD_ShowChar(uint16_t x,uint16_t y,uint8_t num,uint8_t sizey,uint8_t mode);
 
 void LCD_ShowString(uint16_t x,uint16_t y, const char *p, uint8_t sizey, uint8_t mode);
 
+void LCD_ShowIntNum(uint16_t x, uint16_t y, uint16_t num, uint8_t len, uint8_t sizey, uint8_t mode);
+
 void LCD_ShowFloatNum1(uint16_t x, uint16_t y,  float num, uint8_t len, uint8_t sizey, uint8_t pre, uint8_t mode);
 
-
+//void LCD_TempSymbol(uint16_t x,uint16_t y,uint8_t sizey,uint8_t mode);
 
 
