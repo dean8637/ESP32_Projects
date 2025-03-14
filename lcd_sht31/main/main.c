@@ -2,6 +2,8 @@
 
 
 
+
+
 /*bsp init handle*/
 i2c_master_bus_handle_t i2c_bus_handle;
 i2c_master_dev_handle_t i2c_dev_handle;
@@ -64,11 +66,11 @@ void bsp_init()
 
     LCD_Fill(&spi_dev_handle, BACK_COLOR_WHITE);
 
-    LCD_ShowString(10, 0, "TEMP", 72, 0);
-    LCD_ShowString(154, 0, ":", 72, 0);
+    LCD_ShowString(0, 0, "TEMP", 72, DISPLAY_MODE);
+    LCD_ShowString(144, 0, ":", 72, DISPLAY_MODE);
 
-    LCD_ShowString(10, 62, "HUMI:", 72, 0);
-    LCD_ShowString(154, 62, ":", 72, 0);
+    LCD_ShowString(0, 62, "HUMI:", 72, DISPLAY_MODE);
+    LCD_ShowString(144, 62, ":", 72, DISPLAY_MODE);
 
 
 
@@ -136,15 +138,15 @@ void Task_SHT31_Single_Shot()
 
 
 
-        LCD_ShowIntNum(175, 0, temp_int/10, 2, 72, 0);
-        LCD_ShowString(247, 0, ".", 72, 0);
-        LCD_ShowIntNum(263, 0, temp_int%10, 1, 72, 0);
-        LCD_ShowString(299, 0, "C", 72, 0);
+        LCD_ShowIntNum(165, 0, temp_int/10, 2, 72, DISPLAY_MODE);
+        LCD_ShowString(237, 0, ".", 72, DISPLAY_MODE);
+        LCD_ShowIntNum(253, 0, temp_int%10, 1, 72, DISPLAY_MODE);
+        LCD_ShowString(289, 0, "C", 72, DISPLAY_MODE);
 
-        LCD_ShowIntNum(175, 62, humi_int/10, 2, 72, 0);
-        LCD_ShowString(247, 62, ".", 72, 0);
-        LCD_ShowIntNum(263, 62, humi_int%10, 1, 72, 0);
-        LCD_ShowString(299, 62, "%", 72, 0);
+        LCD_ShowIntNum(165, 62, humi_int/10, 2, 72, DISPLAY_MODE);
+        LCD_ShowString(237, 62, ".", 72, DISPLAY_MODE);
+        LCD_ShowIntNum(253, 62, humi_int%10, 1, 72, DISPLAY_MODE);
+        LCD_ShowString(289, 62, "%", 72, DISPLAY_MODE);
 
 
 

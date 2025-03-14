@@ -14,7 +14,9 @@
 #define BACK_COLOR_WHITE   0x00
 #define BACK_COLOR_BLACK    0xff
 
-
+#define FONT_WHITE   0
+#define FONT_BLACK    1
+#define DISPLAY_MODE   FONT_BLACK
 
 void bsp_init();
 

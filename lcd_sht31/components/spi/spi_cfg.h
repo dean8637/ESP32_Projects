@@ -10,7 +10,6 @@
 #include "driver/gpio.h"
 
 #include "font.h"
-#include "font2.h"
 #include "font3.h"
 
 
