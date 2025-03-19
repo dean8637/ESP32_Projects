@@ -87,3 +87,4 @@ $<TARGET_FILE:__idf_main>
 $<TARGET_FILE:__idf_i2c>
 $<TARGET_FILE:__idf_sht31>
 $<TARGET_FILE:__idf_spi>
+$<TARGET_FILE:__idf_wifi>

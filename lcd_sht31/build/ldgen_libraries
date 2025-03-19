@@ -87,3 +87,4 @@ E:/ESP32_Projects/lcd_sht31/build/esp-idf/main/libmain.a
 E:/ESP32_Projects/lcd_sht31/build/esp-idf/i2c/libi2c.a
 E:/ESP32_Projects/lcd_sht31/build/esp-idf/sht31/libsht31.a
 E:/ESP32_Projects/lcd_sht31/build/esp-idf/spi/libspi.a
+E:/ESP32_Projects/lcd_sht31/build/esp-idf/wifi/libwifi.a

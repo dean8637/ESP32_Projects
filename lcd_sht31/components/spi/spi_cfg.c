@@ -410,36 +410,78 @@ void LCD_ShowIntNum(uint16_t x, uint16_t y, uint16_t num, uint8_t len, uint8_t s
 } 
 
 
-// void LCD_TempSymbol(uint16_t x,uint16_t y,uint8_t sizey,uint8_t mode)
-// {
-// 	uint8_t temp1,sizex,t;
-// 	uint16_t i,TypefaceNum;
-// 	uint16_t x0=x;
-// 	sizex=sizey/2;
-// 	TypefaceNum=(sizex/8+((sizex%8)?1:0))*sizey;  
-// 	for(i=0;i<TypefaceNum;i++)
-// 	{ 
 
-// 		if(sizey==72)
-//             temp1=temp_symbol[i];		 
 
-// 		for(t=0;t<8;t++)
-// 		{
-// 				if(temp1&(0x01<<t))LCD_DrawPoint(x,y,mode);
-// 				else LCD_DrawPoint(x,y,!mode);
-// 				x++;
-// 				if((x-x0)==sizex)
-// 				{
-// 					x=x0;
-// 					y++;
-// 					break;
-// 				}
-// 		}
-// 	}   	 	  
-// }
+void LCD_ShowPicture(uint16_t x, uint16_t y, uint16_t sizex, uint16_t sizey, uint8_t BMP[], uint8_t mode)
+{
+
+    uint16_t dx, dy;
+    uint16_t bytes_per_line = (sizex + 7) / 8; // 每行字节数（向上取整）
+
+    for (dy = 0; dy < sizey; dy++) {       // 遍历图片的每一行
+        for (dx = 0; dx < sizex; dx++) {   // 遍历图片的每一列
+            uint16_t x_pos = x + dx;            // 计算LCD的x坐标
+            uint16_t y_pos = y + dy;            // 计算LCD的y坐标
+            uint16_t byte_idx = dy * bytes_per_line + (dx / 8); // BMP数组中的字节索引
+            uint8_t bit_pos = 7 - (dx % 8);     // 高位在前，计算位位置
+            uint8_t bit_val = (BMP[byte_idx] >> bit_pos) & 0x01; // 提取对应位的值
+            uint8_t draw_mode = bit_val ? (1 - mode) : mode; // 确定绘制模式
+
+            LCD_DrawPoint(x_pos, y_pos, draw_mode); // 调用画点函数
+        }
+    }
+}
 
 
 
+void LCD_DrawLine(uint8_t x1,uint8_t y1,uint8_t x2,uint8_t y2)
+{
+	uint16_t t; 
+	int xerr=0,yerr=0,delta_x,delta_y,distance;
+	int incx,incy,uRow,uCol;
+	delta_x=x2-x1; //������������ 
+	delta_y=y2-y1;
+	uRow=x1;//�����������
+	uCol=y1;
+	if(delta_x>0)incx=1; //���õ������� 
+	else if (delta_x==0)incx=0;//��ֱ�� 
+	else {incx=-1;delta_x=-delta_x;}
+	if(delta_y>0)incy=1;
+	else if (delta_y==0)incy=0;//ˮƽ�� 
+	else {incy=-1;delta_y=-delta_x;}
+	if(delta_x>delta_y)distance=delta_x; //ѡȡ�������������� 
+	else distance=delta_y;
+	for(t=0;t<distance+1;t++)
+	{
+		LCD_DrawPoint(uRow,uCol,0);//����
+		xerr+=delta_x;
+		yerr+=delta_y;
+		if(xerr>distance)
+		{
+			xerr-=distance;
+			uRow+=incx;
+		}
+		if(yerr>distance)
+		{
+			yerr-=distance;
+			uCol+=incy;
+		}
+	}
+}
+
+/******************************************************************************
+      ����˵����������
+      ������ݣ�x1,y1   ��ʼ����
+                x2,y2   ��ֹ����
+      ����ֵ��  ��
+******************************************************************************/
+void LCD_DrawRectangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
+{
+	LCD_DrawLine(x1,y1,x2,y1);
+	LCD_DrawLine(x1,y1,x1,y2);
+	LCD_DrawLine(x1,y2,x2,y2);
+	LCD_DrawLine(x2,y1,x2,y2);
+}
 
 
 

@@ -863,3 +863,10 @@ E:/ESP32_Projects/lcd_sht31/build/esp-idf/spi/CMakeFiles/list_install_components
 E:/ESP32_Projects/lcd_sht31/build/esp-idf/spi/CMakeFiles/install.dir
 E:/ESP32_Projects/lcd_sht31/build/esp-idf/spi/CMakeFiles/install/local.dir
 E:/ESP32_Projects/lcd_sht31/build/esp-idf/spi/CMakeFiles/install/strip.dir
+E:/ESP32_Projects/lcd_sht31/build/esp-idf/wifi/CMakeFiles/__idf_wifi.dir
+E:/ESP32_Projects/lcd_sht31/build/esp-idf/wifi/CMakeFiles/edit_cache.dir
+E:/ESP32_Projects/lcd_sht31/build/esp-idf/wifi/CMakeFiles/rebuild_cache.dir
+E:/ESP32_Projects/lcd_sht31/build/esp-idf/wifi/CMakeFiles/list_install_components.dir
+E:/ESP32_Projects/lcd_sht31/build/esp-idf/wifi/CMakeFiles/install.dir
+E:/ESP32_Projects/lcd_sht31/build/esp-idf/wifi/CMakeFiles/install/local.dir
+E:/ESP32_Projects/lcd_sht31/build/esp-idf/wifi/CMakeFiles/install/strip.dir

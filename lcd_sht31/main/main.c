@@ -4,6 +4,13 @@
 
 
 
+static const char *TAG1 = "wifi station";
+static int s_retry_num = 0;
+
+
+
+
+
 /*bsp init handle*/
 i2c_master_bus_handle_t i2c_bus_handle;
 i2c_master_dev_handle_t i2c_dev_handle;
@@ -18,6 +25,9 @@ TaskHandle_t task_start_handle;
 
 TaskHandle_t single_shot_handle;
 TaskHandle_t find_sht31_handle;
+TaskHandle_t wifi_con_handle;
+TaskHandle_t wifi_disc_handle;
+TaskHandle_t mqtt_start_handle;
 
 
 
@@ -25,12 +35,6 @@ TaskHandle_t find_sht31_handle;
 /*sht31 data*/
 volatile float temp;
 volatile float humi;
-
-
-
-
-
-
 
 
 
@@ -72,9 +76,24 @@ void bsp_init()
     LCD_ShowString(0, 62, "HUMI:", 72, DISPLAY_MODE);
     LCD_ShowString(144, 62, ":", 72, DISPLAY_MODE);
 
+    LCD_DrawRectangle(0, 135, 168, 384);
+
+
+    //LCD_ShowPicture(32, 135, 96, 32, pub, 1);
+    LCD_ShowPicture(0, 135, 384, 32, rect, 1);
 
 
     LCD_Refresh(&spi_dev_handle);
+
+
+
+    wifi_init_sta(event_handler);
+
+
+
+
+
+
 
 
 
@@ -97,6 +116,9 @@ void Task_Start()
 {
 
     xTaskCreatePinnedToCore(Task_SHT31_Single_Shot, "SHT31_Single_Shot", 3072, NULL, 12, &single_shot_handle, 1);
+    xTaskCreatePinnedToCore(Task_WiFi_Con, "wifi_con", 2048, NULL, 10, &wifi_con_handle, 1);
+    xTaskCreatePinnedToCore(Task_WiFi_Disc, "wifi_disc", 2048, NULL, 8, &wifi_disc_handle, 1);
+    xTaskCreatePinnedToCore(Task_MQTT_Start, "mqtt_start", 2048, NULL, 8, &mqtt_start_handle, 1);
     
 
     vTaskDelete(NULL);
@@ -117,6 +139,7 @@ void Task_SHT31_Single_Shot()
 
     while (1)
     {
+
         i2c_master_transmit(i2c_dev_handle, single_shot, sizeof(single_shot), -1);
 
         vTaskDelay(pdMS_TO_TICKS(15));
@@ -162,13 +185,144 @@ void Task_SHT31_Single_Shot()
 
 
 
+void Task_WiFi_Con()
+{
+    while (1)
+    {
+        /* code */
+        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+        LCD_ShowPicture(0, 136, 32, 32, wifi_logo1, 1);
+
+    }
+    
+}
+
+void Task_WiFi_Disc()
+{
+
+    while (1)
+    {
+        /* code */
+
+        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+        LCD_ShowPicture(0, 136, 32, 32, wifi_logo2, 1);
+
+    }
+    
+}
 
 
+void event_handler(void* arg, esp_event_base_t event_base,
+    int32_t event_id, void* event_data)
+{
+    if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
+    esp_wifi_connect();
+    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
+
+        xTaskNotifyGive(wifi_disc_handle);
+        if (s_retry_num < 10) {
+            esp_wifi_connect();
+            s_retry_num++;
+            ESP_LOGI(TAG1, "retry to connect to the AP");
+        } 
+        ESP_LOGI(TAG1,"connect to the AP fail");
+
+    } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
+        ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
+        ESP_LOGI(TAG1, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
+        s_retry_num = 0;
+        xTaskNotifyGive(wifi_con_handle);
+        xTaskNotifyGive(mqtt_start_handle);
+
+    }
+}
 
 
+void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data)
+{
+    ESP_LOGI("MQTT", "Event dispatched from event loop base=%s, event_id=%" PRIi32 "", base, event_id);
+    esp_mqtt_event_handle_t event = event_data;
+    esp_mqtt_client_handle_t client = event->client;
+    int msg_id;
+    switch ((esp_mqtt_event_id_t)event_id) {
+    case MQTT_EVENT_CONNECTED:
+        ESP_LOGI("MQTT", "MQTT_EVENT_CONNECTED");
+        msg_id = esp_mqtt_client_publish(client, "Home/Sensor/Apartment/Temp", "data_3", 0, 1, 0);
+        ESP_LOGI("MQTT", "sent publish successful, msg_id=%d", msg_id);
+
+        msg_id = esp_mqtt_client_subscribe(client, "Home/Sensor/Apartment/Humi", 1);
+        ESP_LOGI("MQTT", "sent subscribe successful, msg_id=%d", msg_id);
+
+        // msg_id = esp_mqtt_client_subscribe(client, "/topic/qos1", 1);
+        // ESP_LOGI("MQTT", "sent subscribe successful, msg_id=%d", msg_id);
+
+        // msg_id = esp_mqtt_client_unsubscribe(client, "/topic/qos1");
+        // ESP_LOGI("MQTT", "sent unsubscribe successful, msg_id=%d", msg_id);
+        break;
+    case MQTT_EVENT_DISCONNECTED:
+        ESP_LOGI("MQTT", "MQTT_EVENT_DISCONNECTED");
+        break;
+
+    case MQTT_EVENT_SUBSCRIBED:
+        ESP_LOGI("MQTT", "MQTT_EVENT_SUBSCRIBED, msg_id=%d", event->msg_id);
+        // msg_id = esp_mqtt_client_publish(client, "Home/Sensor/Apartment/Humi", "data", 0, 1, 0);
+        // ESP_LOGI("MQTT", "sent publish successful, msg_id=%d", msg_id);
+        break;
+    case MQTT_EVENT_UNSUBSCRIBED:
+        ESP_LOGI("MQTT", "MQTT_EVENT_UNSUBSCRIBED, msg_id=%d", event->msg_id);
+        break;
+    case MQTT_EVENT_PUBLISHED:
+        ESP_LOGI("MQTT", "MQTT_EVENT_PUBLISHED, msg_id=%d", event->msg_id);
+        break;
+    case MQTT_EVENT_DATA:
+        ESP_LOGI("MQTT", "MQTT_EVENT_DATA");
+        printf("TOPIC=%.*s\r\n", event->topic_len, event->topic);
+        printf("DATA=%.*s\r\n", event->data_len, event->data);
+        break;
+    // case MQTT_EVENT_ERROR:
+    //     ESP_LOGI("MQTT", "MQTT_EVENT_ERROR");
+    //     if (event->error_handle->error_type == MQTT_ERROR_TYPE_TCP_TRANSPORT) {
+    //         log_error_if_nonzero("reported from esp-tls", event->error_handle->esp_tls_last_esp_err);
+    //         log_error_if_nonzero("reported from tls stack", event->error_handle->esp_tls_stack_err);
+    //         log_error_if_nonzero("captured as transport's socket errno",  event->error_handle->esp_transport_sock_errno);
+    //         ESP_LOGI("MQTT", "Last errno string (%s)", strerror(event->error_handle->esp_transport_sock_errno));
+
+    //     }
+    //     break;
+    default:
+        ESP_LOGI("MQTT", "Other event id:%d", event->event_id);
+        break;
+    }
+}
+
+void mqtt_app_start(void)
+{
+    esp_mqtt_client_config_t mqtt_cfg = {
+        .broker.address.uri = "mqtt://broker-cn.emqx.io",
+    };
 
 
+    esp_mqtt_client_handle_t client = esp_mqtt_client_init(&mqtt_cfg);
+    /* The last argument may be used to pass data to the event handler, in this example mqtt_event_handler */
+    esp_mqtt_client_register_event(client, ESP_EVENT_ANY_ID, mqtt_event_handler, NULL);
+    esp_mqtt_client_start(client);
+}
 
+void Task_MQTT_Start()
+{
+
+    while (1)
+    {
+        /* code */
+        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+
+        mqtt_app_start();
+
+        vTaskDelete(NULL);
+
+    }
+    
+}
 
 
 

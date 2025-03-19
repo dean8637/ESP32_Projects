@@ -11,6 +11,7 @@
 
 #include "font.h"
 #include "font3.h"
+#include "pic.h"
 
 
 
@@ -80,6 +81,12 @@ void LCD_ShowIntNum(uint16_t x, uint16_t y, uint16_t num, uint8_t len, uint8_t s
 
 void LCD_ShowFloatNum1(uint16_t x, uint16_t y,  float num, uint8_t len, uint8_t sizey, uint8_t pre, uint8_t mode);
 
-//void LCD_TempSymbol(uint16_t x,uint16_t y,uint8_t sizey,uint8_t mode);
+
+void LCD_ShowPicture(uint16_t x, uint16_t y, uint16_t sizex, uint16_t sizey, uint8_t BMP[], uint8_t mode);
+
+
+void LCD_DrawLine(uint8_t x1,uint8_t y1,uint8_t x2,uint8_t y2);
+
+void LCD_DrawRectangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
 
 

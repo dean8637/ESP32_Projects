@@ -572,3 +572,8 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("E:/ESP32_Projects/lcd_sht31/build/esp-idf/spi/cmake_install.cmake")
 endif()
 
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("E:/ESP32_Projects/lcd_sht31/build/esp-idf/wifi/cmake_install.cmake")
+endif()
+

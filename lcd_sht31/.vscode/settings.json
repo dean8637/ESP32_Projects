@@ -19,7 +19,12 @@
         "sht31.h": "c",
         "main.h": "c",
         "cstdint": "cpp",
-        "spi_cfg.h": "c"
+        "spi_cfg.h": "c",
+        "mqtt_client.h": "c",
+        "mqtt_cfg.h": "c",
+        "esp_event.h": "c",
+        "pic.h": "c",
+        "wifi_cfg.h": "c"
     },
     "idf.pythonInstallPath": "d:\\ESP_IDF\\Tools\\tools\\idf-python\\3.11.2\\python.exe"
 }
