@@ -45,7 +45,12 @@ void Task_WiFi_Con();
 
 void Task_WiFi_Disc();
 
+void Task_WiFi_Reconnect();
+
 void Task_MQTT_Start();
+
+void Task_Pub_Temp();
+void Task_Offline();
 
 
 
