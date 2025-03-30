@@ -157,35 +157,40 @@ void Task_SHT31_Single_Shot()
     while (1)
     {
 
-        i2c_master_transmit(i2c_dev_handle, single_shot, sizeof(single_shot), -1);
+        // i2c_master_transmit(i2c_dev_handle, single_shot, sizeof(single_shot), -1);
 
-        vTaskDelay(pdMS_TO_TICKS(15));
+        // vTaskDelay(pdMS_TO_TICKS(15));
 
-        i2c_master_receive(i2c_dev_handle, data, sizeof(data), -1);
+        // i2c_master_receive(i2c_dev_handle, data, sizeof(data), -1);
 
-        uint16_t raw_temp = (data[0] << 8) | data[1];
+        // uint16_t raw_temp = (data[0] << 8) | data[1];
 
-        uint16_t raw_hum = (data[3] << 8) | data[4];
+        // uint16_t raw_hum = (data[3] << 8) | data[4];
 
-        temp = -45.0f + 175.0f * (raw_temp / 65535.0f);
-        humi = 100.0f * (raw_hum / 65535.0f);
+        // temp = -45.0f + 175.0f * (raw_temp / 65535.0f);
+        // humi = 100.0f * (raw_hum / 65535.0f);
 
-        temp_int = (uint16_t)(temp*10);
-        humi_int = (uint16_t)(humi*10);
+        // temp_int = (uint16_t)(temp*10);
+        // humi_int = (uint16_t)(humi*10);
         
 
-        ESP_LOGI("SHT31", "Temp: %0.2f℃  Hum: %0.2f%%", temp, humi);
+        // ESP_LOGI("SHT31", "Temp: %0.2f℃  Hum: %0.2f%%", temp, humi);
 
 
 
-        LCD_ShowIntNum(165, 0, temp_int/10, 2, 72, DISPLAY_MODE);
+        //LCD_ShowIntNum(165, 0, temp_int/10, 2, 72, DISPLAY_MODE);
+        LCD_ShowIntNum(165, 0, 23, 2, 72, DISPLAY_MODE);
         LCD_ShowString(237, 0, ".", 72, DISPLAY_MODE);
-        LCD_ShowIntNum(253, 0, temp_int%10, 1, 72, DISPLAY_MODE);
+        // LCD_ShowIntNum(253, 0, temp_int%10, 1, 72, DISPLAY_MODE);
+        LCD_ShowIntNum(253, 0, 8, 1, 72, DISPLAY_MODE);
+
         LCD_ShowString(289, 0, "C", 72, DISPLAY_MODE);
 
-        LCD_ShowIntNum(165, 62, humi_int/10, 2, 72, DISPLAY_MODE);
+        // LCD_ShowIntNum(165, 62, humi_int/10, 2, 72, DISPLAY_MODE);
+        LCD_ShowIntNum(165, 62, 63, 2, 72, DISPLAY_MODE);
         LCD_ShowString(237, 62, ".", 72, DISPLAY_MODE);
-        LCD_ShowIntNum(253, 62, humi_int%10, 1, 72, DISPLAY_MODE);
+        // LCD_ShowIntNum(253, 62, humi_int%10, 1, 72, DISPLAY_MODE);
+        LCD_ShowIntNum(253, 62, 2, 1, 72, DISPLAY_MODE);
         LCD_ShowString(289, 62, "%", 72, DISPLAY_MODE);
         xTaskNotifyGive(pub_temp_handle);
 

@@ -1,9 +1,0 @@
-{
-    "C_Cpp.intelliSenseEngine": "default",
-    "idf.espIdfPathWin": "D:\\ESP_IDF\\v5.4\\esp-idf",
-    "idf.toolsPathWin": "d:\\ESP_IDF\\Tools",
-    "idf.pythonInstallPath": "d:\\ESP_IDF\\Tools\\tools\\idf-python\\3.11.2\\python.exe",
-    "files.associations": {
-        "mqtt_client.h": "c"
-    }
-}
